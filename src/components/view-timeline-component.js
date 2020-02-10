@@ -447,7 +447,7 @@ class ViewTimeline extends Component {
     let description = searchArgs.description;
     let rank = searchArgs.rank;
 
-    if (tag !== null || description !== "" || rank !== null) {
+    if (tag !== null || description !== "" || rank !== null || (date_start !== "" && date_end !== "")) {
 
       this.setState({loading: true});
 
