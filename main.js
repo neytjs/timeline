@@ -44,7 +44,8 @@ app.on('ready', () => {
 			unsaved: false,
 			tags: "",
 			temp: {},
-			editing_entry: {}
+			editing_entry: {},
+			loc: ""
 		}
 		global.adding = {
 	    date: new Date(),
@@ -253,7 +254,8 @@ app.on('window-all-closed', () => {
 		unsaved: false,
 		tags: "",
 		temp: {},
-		editing_entry: {}
+		editing_entry: {},
+		loc: ""
 	}
 
 	global.adding = {
