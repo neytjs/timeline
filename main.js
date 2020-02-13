@@ -45,7 +45,7 @@ app.on('ready', () => {
 			tags: "",
 			temp: {},
 			editing_entry: {},
-			loc: ""
+			loc: 0
 		}
 		global.adding = {
 	    date: new Date(),
@@ -255,7 +255,7 @@ app.on('window-all-closed', () => {
 		tags: "",
 		temp: {},
 		editing_entry: {},
-		loc: ""
+		loc: 0
 	}
 
 	global.adding = {
