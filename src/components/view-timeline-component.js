@@ -55,8 +55,10 @@ class ViewTimeline extends Component {
       let loading = await this.viewAll();
       this.setState({ loading: loading }, function() {
         if (remote.getGlobal('editing').loc !== 0 && remote.getGlobal('search').view_all !== false) {
-          window.scrollTo(0, remote.getGlobal('editing').loc);
-          remote.getGlobal('editing').loc = 0;
+          setTimeout(function() {
+            window.scrollTo(0, remote.getGlobal('editing').loc);
+            remote.getGlobal('editing').loc = 0;
+          }, 300);
         }
       });
     }
@@ -252,7 +254,7 @@ class ViewTimeline extends Component {
         this.cancelEdit();
         remote.getGlobal('editing').id = id;
         remote.getGlobal('editing')._id = _id;
-        remote.getGlobal('editing').editing_entry = state.entries[id];  
+        remote.getGlobal('editing').editing_entry = state.entries[id];
         state.temp = cloneDeep(state.entries[id]);
         remote.getGlobal('editing').temp = state.temp;
       }
@@ -275,6 +277,11 @@ class ViewTimeline extends Component {
           remote.getGlobal('editing').id = id;
           remote.getGlobal('editing')._id = _id;
           remote.getGlobal('editing').editing_entry = state.entries[id];
+
+
+
+
+
           state.temp = cloneDeep(state.entries[id]);
           remote.getGlobal('editing').temp = state.temp;
         }
@@ -408,10 +415,7 @@ class ViewTimeline extends Component {
 
       this.props.entries_longterm.update({entered: entered}, {$set:{body: html_body, date: date_in_ms, display_date: date, tags: this.state.entries[id].tags, rank: this.rank.value}}, function(err, entries) {
       });
-
-
-
-
+    
       let state = Object.assign({}, this.state);
 
       state.entries[state.editing].date = date_in_ms;
@@ -554,8 +558,10 @@ class ViewTimeline extends Component {
       this.searchString(tags, date_start, date_end, description, ranks);
 
       if (remote.getGlobal('editing').loc !== 0) {
-        window.scrollTo(0, remote.getGlobal('editing').loc);
-        remote.getGlobal('editing').loc = 0;
+        setTimeout(function() {
+          window.scrollTo(0, remote.getGlobal('editing').loc);
+          remote.getGlobal('editing').loc = 0;
+        }, 300);
       } else {
         window.scrollTo(0, 0);
       }
