@@ -25,12 +25,12 @@ class Utilities {
         song_string = song_string.replace(/(<([^>]+)>)/ig, " ");
         song_string = song_string.replace(/&nbsp;/ig, " ");
         song_string = song_string.replace(/\n/ig, " ");
-        song_string = song_string.replace(/&quot;/ig, " ");
-        song_string = song_string.replace(/&ldquo;/ig, " ");
-        song_string = song_string.replace(/&rdquo;/ig, " ");
-        song_string = song_string.replace(/&#39;/ig, " ");
-        song_string = song_string.replace(/&lsquo;/ig, " ");
-        song_string = song_string.replace(/&rsquo;/ig, " ");
+        song_string = song_string.replace(/&quot;/ig, "");
+        song_string = song_string.replace(/&ldquo;/ig, "");
+        song_string = song_string.replace(/&rdquo;/ig, "");
+        song_string = song_string.replace(/&#39;/ig, "");
+        song_string = song_string.replace(/&lsquo;/ig, "");
+        song_string = song_string.replace(/&rsquo;/ig, "");
         song_string = this.keepAllLettersNumbersSpacesQuotes(song_string);
         song_string = song_string.toLowerCase();
         song_string = song_string.trim();
@@ -87,12 +87,12 @@ class Utilities {
             song_string = song_string.replace(/(<([^>]+)>)/ig, " ");
             song_string = song_string.replace(/&nbsp;/ig, " ");
             song_string = song_string.replace(/\n/ig, " ");
-            song_string = song_string.replace(/&quot;/ig, " ");
-            song_string = song_string.replace(/&ldquo;/ig, " ");
-            song_string = song_string.replace(/&rdquo;/ig, " ");
-            song_string = song_string.replace(/&#39;/ig, " ");
-            song_string = song_string.replace(/&lsquo;/ig, " ");
-            song_string = song_string.replace(/&rsquo;/ig, " ");
+            song_string = song_string.replace(/&quot;/ig, "");
+            song_string = song_string.replace(/&ldquo;/ig, "");
+            song_string = song_string.replace(/&rdquo;/ig, "");
+            song_string = song_string.replace(/&#39;/ig, "");
+            song_string = song_string.replace(/&lsquo;/ig, "");
+            song_string = song_string.replace(/&rsquo;/ig, "");
             song_string = this.keepAllLettersNumbersSpacesQuotes(song_string);
             song_string = song_string.toLowerCase();
             song_string = song_string.trim();
@@ -313,7 +313,7 @@ class Utilities {
   }
 
 
-  static doubleShuffler(first_array, second_array) {  
+  static doubleShuffler(first_array, second_array) {
   	Array.prototype.shuffle = function (old_index, new_index) {
   		this.splice(new_index, 0, this.splice(old_index, 1)[0]);
   		return this[new_index];
