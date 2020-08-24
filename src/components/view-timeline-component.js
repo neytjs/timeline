@@ -297,6 +297,9 @@ class ViewTimeline extends Component {
         this.setState(state);
       }
     }
+    
+    let element = document.getElementById("entry" + id);
+    element.scrollIntoView();
   }
 
 
@@ -415,7 +418,7 @@ class ViewTimeline extends Component {
 
       this.props.entries_longterm.update({entered: entered}, {$set:{body: html_body, date: date_in_ms, display_date: date, tags: this.state.entries[id].tags, rank: this.rank.value}}, function(err, entries) {
       });
-    
+
       let state = Object.assign({}, this.state);
 
       state.entries[state.editing].date = date_in_ms;
@@ -1098,7 +1101,7 @@ class ViewTimeline extends Component {
     const { editor } = this.state;
     return this.state.entries.map((entry, i) => {
       return (
-        <tr key={"entry" + i}>
+        <tr key={"entry" + i} id={"entry" + i}>
           { this.state.editing == i ?
             <td>
               <table className="entry">
