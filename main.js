@@ -8,6 +8,7 @@ app.on('ready', () => {
 
 		webPreferences: {
 			nodeIntegration: true,
+			enableRemoteModule: true,
 			devTools: false
 		},
 		icon: require('path').join(__dirname, 'timeline.png')
