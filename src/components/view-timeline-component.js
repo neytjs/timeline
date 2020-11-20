@@ -297,9 +297,11 @@ class ViewTimeline extends Component {
         this.setState(state);
       }
     }
-    
+
     let element = document.getElementById("entry" + id);
-    element.scrollIntoView();
+    if (element) {
+      element.scrollIntoView();
+    }
   }
 
 
