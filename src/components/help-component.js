@@ -8,7 +8,7 @@ class Help extends Component {
         <p>
           <b>What is Timeline?</b>
           <br/>
-          Timeline is a special purpose text editor designed to organize events by tags and then analyse the significance of events over time using ranking scores.
+          Timeline is a special purpose text editor designed to organize events by tags and then analyze the significance of events over time using ranking scores.
         </p>
         <p>
           <b>How do I add an entry?</b>
