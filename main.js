@@ -8,7 +8,7 @@ app.on('ready', () => {
 
 		webPreferences: {
 			nodeIntegration: true,
-			enableRemoteModule: true,
+            enableRemoteModule: true,
 			devTools: false
 		},
 		icon: require('path').join(__dirname, 'timeline.png')
@@ -216,16 +216,19 @@ app.on('ready', () => {
 	mainWindow.loadURL(url);
 	mainWindow.maximize();
 	mainWindow.webContents.openDevTools();
-});
 
-let darwin = process.platform === 'darwin';
-
-
-app.on('window-all-closed', () => {
-
-  if (!darwin) {
-    app.quit();
-  }
+	mainWindow.on('close', function(e) {
+	var choice = require('electron').dialog.showMessageBoxSync(this,
+			{
+				type: 'question',
+				buttons: ['Quit', 'Cancel'],
+				title: 'Confirm',
+				message: 'Any unsaved changes will be lost. Are you sure you want to quit?'
+		 });
+		 if (choice === 1){
+			 e.preventDefault();
+		 }
+	});	
 });
 
 
