@@ -7,12 +7,12 @@ import Metrics from './metrics-component';
 import Settings from './settings-component';
 import Help from './help-component';
 import Utilities from './js/utilities.js';
-const remote = window.require('electron').remote;
+const {app, getGlobal} = window.require('@electron/remote');
 const ipcRenderer = window.require('electron').ipcRenderer;
 import AppData from './js/app_data.js';
 const defaultAppData = AppData.defaultAppData();
 
-let app_path = remote.app.getAppPath('');
+let app_path = app.getAppPath('');
 
 var DataStore = window.require('nedb');
 var app_data_longterm = new DataStore({ filename: app_path+'/data/app_data.db', autoload: true });
@@ -67,7 +67,7 @@ class App extends Component {
 
           app_data_longterm.update({}, {$set: {filepath: this.filepath}}, function() {
             this.setState({ view_or_add: "view" });
-            remote.getGlobal('searching_adding').searching_adding = "adding";
+            getGlobal('searching_adding').searching_adding = "adding";
 
             this.getEntries(true);
           }.bind(this));
@@ -138,35 +138,35 @@ class App extends Component {
       }.bind(this));
     }.bind(this));
     ipcRenderer.on('view', function(event, response) {
-      remote.getGlobal('searching_adding').searching_adding = "none";
+      getGlobal('searching_adding').searching_adding = "none";
       this.setState({ view_or_add: response });
     }.bind(this));
     ipcRenderer.on('search', function(event, response) {
-      remote.getGlobal('searching_adding').searching_adding = "searching";
+      getGlobal('searching_adding').searching_adding = "searching";
       this.setState({ view_or_add: response });
     }.bind(this));
     ipcRenderer.on('add', function(event, response) {
-      remote.getGlobal('searching_adding').searching_adding = "adding";
+      getGlobal('searching_adding').searching_adding = "adding";
       this.setState({ view_or_add: response });
     }.bind(this));
     ipcRenderer.on('export', function(event, response) {
-      remote.getGlobal('searching_adding').searching_adding = "exporting";
+      getGlobal('searching_adding').searching_adding = "exporting";
       this.setState({ view_or_add: response });
     }.bind(this));
     ipcRenderer.on('analysis', function(event, response) {
-      remote.getGlobal('searching_adding').searching_adding = "none";
+      getGlobal('searching_adding').searching_adding = "none";
       this.setState({ view_or_add: response });
     }.bind(this));
     ipcRenderer.on('metrics', function(event, response) {
-      remote.getGlobal('searching_adding').searching_adding = "none";
+      getGlobal('searching_adding').searching_adding = "none";
       this.setState({ view_or_add: response });
     }.bind(this));
     ipcRenderer.on('settings', function(event, response) {
-      remote.getGlobal('searching_adding').searching_adding = "none";
+      getGlobal('searching_adding').searching_adding = "none";
       this.setState({ view_or_add: response });
     }.bind(this));
     ipcRenderer.on('help', function(event, response) {
-      remote.getGlobal('searching_adding').searching_adding = "none";
+      getGlobal('searching_adding').searching_adding = "none";
       this.setState({ view_or_add: response });
     }.bind(this));
   }
@@ -246,15 +246,15 @@ class App extends Component {
         }
 
         if ((status === "searching" || status === "adding" || status === "exporting" || status === "analysis" || status === "metrics") && final_key !== "enter") {
-          if (remote.getGlobal('searching_adding').searching_adding === status) {
-            remote.getGlobal('searching_adding').searching_adding = "none";
+          if (getGlobal('searching_adding').searching_adding === status) {
+            getGlobal('searching_adding').searching_adding = "none";
             this.setState({ view_or_add: "view" });
           } else {
             if (status === "analysis" || status === "metrics") {
-              remote.getGlobal('searching_adding').searching_adding = "none";
+              getGlobal('searching_adding').searching_adding = "none";
               this.setState({ view_or_add: status });
             } else {
-              remote.getGlobal('searching_adding').searching_adding = status;
+              getGlobal('searching_adding').searching_adding = status;
               this.setState({ view_or_add: "view" });
             }
           }
@@ -337,7 +337,7 @@ class App extends Component {
                   theEntries();
                 });
 
-                remote.getGlobal('search').sorted = app_data.sort_by;
+                getGlobal('search').sorted = app_data.sort_by;
                 this.setState({width: app_data.width, table_width: "100%"});
               }
             });
@@ -354,7 +354,7 @@ class App extends Component {
               theEntries();
             });
 
-            remote.getGlobal('search').sorted = app_data.sort_by;
+            getGlobal('search').sorted = app_data.sort_by;
             this.setState({width: app_data.width, table_width: "100%"});
           }
         } else {

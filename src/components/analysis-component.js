@@ -4,7 +4,7 @@ import Utilities from './js/utilities.js';
 import Chart from 'chart.js';
 import DatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css';
-const remote = window.require('electron').remote;
+const {getGlobal} = window.require('@electron/remote');
 
 class Analysis extends Component {
   constructor(props) {
@@ -16,9 +16,9 @@ class Analysis extends Component {
       backgroundColors: ['#ff6666', '#00cc00', '#4d4dff', '#ffff00', '#a64dff', '#ffa366', '#ff80b3', '#00ffbf', '#88cc00', '#e6004c', '#c2c2a3', '#d2a679', '#ffdb4d', '#ff80ff', '#cccccc', '#4dff88', '#ff531a', '#ff0000'],
       borderColors: ['#ff0000', '#006600', '#0000cc', '#e6e600', '#6600cc', '#ff6600', '#ff0066', '#00b386', '#669900', '#990033', '#999966', '#996633', '#e6b800', '#ff00ff', '#999999', '#00cc44', '#cc3300', '#b30000'],
       entries: [],
-      date_start: remote.getGlobal('analysis').date_start,
-      date_end: remote.getGlobal('analysis').date_end,
-      tag: remote.getGlobal('analysis').tag,
+      date_start: getGlobal('analysis').date_start,
+      date_end: getGlobal('analysis').date_end,
+      tag: getGlobal('analysis').tag,
       all_tags: this.props.all_tags
     }
   }
@@ -42,7 +42,7 @@ class Analysis extends Component {
 
         this.setState({entries: entries}, function() {
 
-          if (remote.getGlobal('analysis').analyzed === true) {
+          if (getGlobal('analysis').analyzed === true) {
             this.conductAnalysis();
           }
         });
@@ -62,7 +62,7 @@ class Analysis extends Component {
 
   conductAnalysis() {
 
-    remote.getGlobal('analysis').analyzed = true;
+    getGlobal('analysis').analyzed = true;
     let state = Object.assign({}, this.state);
     let start = new Date(state.date_start);
     let end = new Date(state.date_end);
@@ -450,23 +450,23 @@ class Analysis extends Component {
 
   handle_date_start_Change(date) {
     this.setState({ date_start: date }, function() {
-      remote.getGlobal('analysis').date_start = this.state.date_start;
+      getGlobal('analysis').date_start = this.state.date_start;
     });
   }
 
   handle_date_end_Change(date) {
     this.setState({ date_end: date }, function() {
-      remote.getGlobal('analysis').date_end = this.state.date_end;
+      getGlobal('analysis').date_end = this.state.date_end;
     });
   }
 
   resetForm() {
     this.setState({date_start: new Date(), date_end: new Date(), tag: null});
 
-    remote.getGlobal('analysis').date_start = new Date();
-    remote.getGlobal('analysis').date_end = new Date();
-    remote.getGlobal('analysis').tag = null;
-    remote.getGlobal('analysis').analyzed = false;
+    getGlobal('analysis').date_start = new Date();
+    getGlobal('analysis').date_end = new Date();
+    getGlobal('analysis').tag = null;
+    getGlobal('analysis').analyzed = false;
 
     window.myLineChart.destroy();
   }
@@ -483,7 +483,7 @@ class Analysis extends Component {
             styles={Utilities.reactSelectStyles(this.props.cssTemplate)}
             value={tag}
             onChange={value => this.setState({ tag: value }, function() {
-              remote.getGlobal('analysis').tag = value;
+              getGlobal('analysis').tag = value;
             })}
             options={Utilities.createTagOptions(all_tags)}
             closeMenuOnSelect={false}

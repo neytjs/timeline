@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Utilities from './js/utilities.js';
-const remote = window.require('electron').remote;
+const {getGlobal} = window.require('@electron/remote');
 const fs = window.require('fs');
 const os = window.require('os');
 
@@ -10,30 +10,30 @@ class Export extends Component {
     this.pressEnter = this.pressEnter.bind(this);
 
     this.state = {
-      file_type: remote.getGlobal('export').file_type,
-      selection: remote.getGlobal('export').selection,
-      jsonChecked: remote.getGlobal('export').jsonChecked,
-      txtChecked: remote.getGlobal('export').txtChecked,
-      allChecked: remote.getGlobal('export').allChecked,
-      selChecked: remote.getGlobal('export').selChecked,
-      message: remote.getGlobal('export').message
+      file_type: getGlobal('export').file_type,
+      selection: getGlobal('export').selection,
+      jsonChecked: getGlobal('export').jsonChecked,
+      txtChecked: getGlobal('export').txtChecked,
+      allChecked: getGlobal('export').allChecked,
+      selChecked: getGlobal('export').selChecked,
+      message: getGlobal('export').message
     }
   }
 
   componentDidMount() {
-    remote.getGlobal('enterTracker').tag_insert_tracker = false;
-    remote.getGlobal('enterTracker').component_tracker = "export";
+    getGlobal('enterTracker').tag_insert_tracker = false;
+    getGlobal('enterTracker').component_tracker = "export";
     document.addEventListener("keydown", this.pressEnter, false);
   }
 
   componentWillUnmount() {
-    remote.getGlobal('enterTracker').tag_insert_tracker = false;
-    remote.getGlobal('enterTracker').component_tracker = "";
+    getGlobal('enterTracker').tag_insert_tracker = false;
+    getGlobal('enterTracker').component_tracker = "";
     document.removeEventListener("keydown", this.pressEnter, false);
   }
 
   pressEnter(event) {
-    if (event.keyCode === 13 && remote.getGlobal('enterTracker').tag_insert_tracker === false && remote.getGlobal('enterTracker').component_tracker === "export") {
+    if (event.keyCode === 13 && getGlobal('enterTracker').tag_insert_tracker === false && getGlobal('enterTracker').component_tracker === "export") {
       this.exportData();
     }
   }
@@ -42,16 +42,16 @@ class Export extends Component {
     if (this.state.file_type === "") {
       alert("You must select a file type for exported data output.");
     } else {
-      let ascdesc = remote.getGlobal('search').ascdesc;
-      let sorted = remote.getGlobal('search').sorted;
+      let ascdesc = getGlobal('search').ascdesc;
+      let sorted = getGlobal('search').sorted;
 
       if (this.state.selection === "sel") {
 
-        let tag = remote.getGlobal('search').search_arguments.tag.searched;
-        let date_start = remote.getGlobal('search').search_arguments.date_start.searched;
-        let date_end = remote.getGlobal('search').search_arguments.date_end.searched;
-        let description = remote.getGlobal('search').search_arguments.description.searched;
-        let rank = remote.getGlobal('search').search_arguments.rank.searched;
+        let tag = getGlobal('search').search_arguments.tag.searched;
+        let date_start = getGlobal('search').search_arguments.date_start.searched;
+        let date_end = getGlobal('search').search_arguments.date_end.searched;
+        let description = getGlobal('search').search_arguments.description.searched;
+        let rank = getGlobal('search').search_arguments.rank.searched;
 
         description = description.replace(/(<([^>]+)>)/ig, " ");
         description = description.replace(/&nbsp;/ig, " ");
@@ -144,7 +144,7 @@ class Export extends Component {
         let message = "File saved at " + savePath;
 
         this.setState({ message: message }, function() {
-          remote.getGlobal('export').message = this.state.message;
+          getGlobal('export').message = this.state.message;
         });
       }.bind(this));
     } else if (file_type === "json") {
@@ -159,7 +159,7 @@ class Export extends Component {
         let message = "File saved at " + savePath;
 
         this.setState({ message: message }, function() {
-          remote.getGlobal('export').message = this.state.message;
+          getGlobal('export').message = this.state.message;
         });
       }.bind(this));
     }
@@ -174,14 +174,14 @@ class Export extends Component {
       allChecked: false,
       selChecked: false
     });
-    remote.getGlobal('export').file_type = "";
-    remote.getGlobal('export').selection = "";
-    remote.getGlobal('export').txtChecked = false;
-    remote.getGlobal('export').jsonChecked = false;
-    remote.getGlobal('export').allChecked = false;
-    remote.getGlobal('export').selChecked = false;
-    remote.getGlobal('enterTracker').tag_insert_tracker = false;
-    remote.getGlobal('enterTracker').component_tracker = "export";
+    getGlobal('export').file_type = "";
+    getGlobal('export').selection = "";
+    getGlobal('export').txtChecked = false;
+    getGlobal('export').jsonChecked = false;
+    getGlobal('export').allChecked = false;
+    getGlobal('export').selChecked = false;
+    getGlobal('enterTracker').tag_insert_tracker = false;
+    getGlobal('enterTracker').component_tracker = "export";
   }
 
   handleFileTypeChange(event) {
@@ -190,11 +190,11 @@ class Export extends Component {
       txtChecked: (event.target.value === "txt" ? true : false),
       jsonChecked: (event.target.value === "json" ? true : false)
     }, function() {
-      remote.getGlobal('export').file_type = this.state.file_type;
-      remote.getGlobal('export').txtChecked = this.state.txtChecked;
-      remote.getGlobal('export').jsonChecked = this.state.jsonChecked;
-      remote.getGlobal('enterTracker').tag_insert_tracker = false;
-      remote.getGlobal('enterTracker').component_tracker = "export";
+      getGlobal('export').file_type = this.state.file_type;
+      getGlobal('export').txtChecked = this.state.txtChecked;
+      getGlobal('export').jsonChecked = this.state.jsonChecked;
+      getGlobal('enterTracker').tag_insert_tracker = false;
+      getGlobal('enterTracker').component_tracker = "export";
     });
   }
 
@@ -204,17 +204,17 @@ class Export extends Component {
       allChecked: (event.target.value === "all" ? true : false),
       selChecked: (event.target.value === "sel" ? true : false)
     }, function() {
-      remote.getGlobal('export').selection = this.state.selection;
-      remote.getGlobal('export').allChecked = this.state.allChecked;
-      remote.getGlobal('export').selChecked = this.state.selChecked;
-      remote.getGlobal('enterTracker').tag_insert_tracker = false;
-      remote.getGlobal('enterTracker').component_tracker = "export";
+      getGlobal('export').selection = this.state.selection;
+      getGlobal('export').allChecked = this.state.allChecked;
+      getGlobal('export').selChecked = this.state.selChecked;
+      getGlobal('enterTracker').tag_insert_tracker = false;
+      getGlobal('enterTracker').component_tracker = "export";
     });
   }
 
   hide_message() {
     this.setState( { message: "" }, function() {
-      remote.getGlobal('export').message = "";
+      getGlobal('export').message = "";
     });
   }
 

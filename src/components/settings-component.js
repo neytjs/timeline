@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-const remote = window.require('electron').remote;
+const {getGlobal} = window.require('@electron/remote');
 
 class Settings extends Component {
   constructor(props) {
@@ -62,7 +62,7 @@ class Settings extends Component {
   handle_sort_by_Change(event) {
     this.setState({sort_by: event.target.value}, function() {
 
-      remote.getGlobal('search').sorted = this.state.sort_by;
+      getGlobal('search').sorted = this.state.sort_by;
     });
   }
 

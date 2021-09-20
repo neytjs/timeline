@@ -8,7 +8,7 @@ import Editor from './editor-component';
 import Utilities from './js/utilities.js';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-const remote = window.require('electron').remote;
+const {getGlobal} = window.require('@electron/remote');
 
 class ViewTimeline extends Component {
   constructor(props) {
@@ -29,21 +29,21 @@ class ViewTimeline extends Component {
       cancel: false,
       loading: true,
       entries_inserted: this.props.entries_inserted,
-      tags: remote.getGlobal('editing').tags,
-      searching_adding: remote.getGlobal('searching_adding').searching_adding,
+      tags: getGlobal('editing').tags,
+      searching_adding: getGlobal('searching_adding').searching_adding,
       search_message: "",
-      temp: remote.getGlobal('editing').temp,
+      temp: getGlobal('editing').temp,
       counter: 0,
-      editor: remote.getGlobal('editing').editing_entry.body,
-      sorted: remote.getGlobal('search').sorted,
-      ascdesc: remote.getGlobal('search').ascdesc,
+      editor: getGlobal('editing').editing_entry.body,
+      sorted: getGlobal('search').sorted,
+      ascdesc: getGlobal('search').ascdesc,
       total: 0,
-      page: remote.getGlobal('search').page,
+      page: getGlobal('search').page,
       per_page: 30,
       start: 0,
       all_tags: this.props.all_tags,
-      id: remote.getGlobal('editing').id,
-      _id: remote.getGlobal('editing')._id
+      id: getGlobal('editing').id,
+      _id: getGlobal('editing')._id
     }
   }
 
@@ -54,10 +54,10 @@ class ViewTimeline extends Component {
 
       let loading = await this.viewAll();
       this.setState({ loading: loading }, function() {
-        if (remote.getGlobal('editing').loc !== 0 && remote.getGlobal('search').view_all !== false) {
+        if (getGlobal('editing').loc !== 0 && getGlobal('search').view_all !== false) {
           setTimeout(function() {
-            window.scrollTo(0, remote.getGlobal('editing').loc);
-            remote.getGlobal('editing').loc = 0;
+            window.scrollTo(0, getGlobal('editing').loc);
+            getGlobal('editing').loc = 0;
           }, 300);
         }
       });
@@ -67,19 +67,19 @@ class ViewTimeline extends Component {
   componentWillUnmount() {
 
     if (this.state.editing !== -1) {
-      remote.getGlobal('editing').tags = this.tag.value;
-      remote.getGlobal('editing').editing_entry.body = this.CKEditor.editor.getData();
+      getGlobal('editing').tags = this.tag.value;
+      getGlobal('editing').editing_entry.body = this.CKEditor.editor.getData();
 
       if (this.state.entries[this.state.id].body !== this.CKEditor.editor.getData() || this.state.tags !== this.tag.value) {
-        remote.getGlobal('editing').unsaved = true;
+        getGlobal('editing').unsaved = true;
       }
     }
   }
 
   enterPress(event) {
-    if (event.keyCode === 13 && remote.getGlobal('enterTracker').tag_insert_tracker === false && remote.getGlobal('enterTracker').component_tracker === "edit") {
+    if (event.keyCode === 13 && getGlobal('enterTracker').tag_insert_tracker === false && getGlobal('enterTracker').component_tracker === "edit") {
       this.saveEntry();
-    } else if (event.keyCode === 13 && remote.getGlobal('enterTracker').tag_insert_tracker === true && remote.getGlobal('enterTracker').component_tracker === "edit") {
+    } else if (event.keyCode === 13 && getGlobal('enterTracker').tag_insert_tracker === true && getGlobal('enterTracker').component_tracker === "edit") {
       this.addTag();
     }
   }
@@ -90,7 +90,7 @@ class ViewTimeline extends Component {
 
       if (display_all === true) {
         this.setState({loading: true, page: 1}, function() {
-          remote.getGlobal('search').page = this.state.page;
+          getGlobal('search').page = this.state.page;
         });
       }
 
@@ -111,7 +111,7 @@ class ViewTimeline extends Component {
             paginate_data = this.paginateEntries(entries, page);
             this.setState({page: page}, function() {
 
-              remote.getGlobal('search').page = page;
+              getGlobal('search').page = page;
             });
           } else {
             paginate_data = this.paginateEntries(entries);
@@ -125,50 +125,50 @@ class ViewTimeline extends Component {
             counter: counter,
             total: total,
             search_message: "",
-            searching_adding: remote.getGlobal('searching_adding').searching_adding
+            searching_adding: getGlobal('searching_adding').searching_adding
           }, function() {
 
-            if (remote.getGlobal('editing').id !== "") {
+            if (getGlobal('editing').id !== "") {
               let state = Object.assign({}, this.state);
-              state.entries[remote.getGlobal('editing').id] = remote.getGlobal('editing').editing_entry;
-              state.editing = remote.getGlobal('editing').id;
-              state.temp = remote.getGlobal('editing').temp;
+              state.entries[getGlobal('editing').id] = getGlobal('editing').editing_entry;
+              state.editing = getGlobal('editing').id;
+              state.temp = getGlobal('editing').temp;
               this.setState(state, function() {
 
-                this.editEntry(remote.getGlobal('editing').id, remote.getGlobal('editing')._id, true);
+                this.editEntry(getGlobal('editing').id, getGlobal('editing')._id, true);
 
-                this.setState({ unsaved: remote.getGlobal('editing').unsaved });
+                this.setState({ unsaved: getGlobal('editing').unsaved });
               });
             }
 
-            if (entries.length === 0 && remote.getGlobal('searching_adding').searching_adding === "none") {
-              remote.getGlobal('searching_adding').searching_adding = "adding";
+            if (entries.length === 0 && getGlobal('searching_adding').searching_adding === "none") {
+              getGlobal('searching_adding').searching_adding = "adding";
               this.setState({searching_adding: "adding"});
             }
 
 
             if (display_all === true) {
 
-              remote.getGlobal('search').view_all = true;
-              remote.getGlobal('search').search_arguments.tag.searched = null;
-              remote.getGlobal('search').search_arguments.date_start.searched = "";
-              remote.getGlobal('search').search_arguments.date_end.searched = "";
-              remote.getGlobal('search').search_arguments.description.searched = "";
-              remote.getGlobal('search').search_arguments.rank.searched = null;
-              remote.getGlobal('search').search_arguments.searchbydate.searched = false;
+              getGlobal('search').view_all = true;
+              getGlobal('search').search_arguments.tag.searched = null;
+              getGlobal('search').search_arguments.date_start.searched = "";
+              getGlobal('search').search_arguments.date_end.searched = "";
+              getGlobal('search').search_arguments.description.searched = "";
+              getGlobal('search').search_arguments.rank.searched = null;
+              getGlobal('search').search_arguments.searchbydate.searched = false;
 
               this.setState({loading: false});
-            } else if (remote.getGlobal('search').view_all === false) {
+            } else if (getGlobal('search').view_all === false) {
 
               this.confirmTimelineSearch({
-                tag: remote.getGlobal('search').search_arguments.tag.searched,
-                date_start: remote.getGlobal('search').search_arguments.date_start.searched,
-                date_end: remote.getGlobal('search').search_arguments.date_end.searched,
-                description: remote.getGlobal('search').search_arguments.description.searched,
-                rank: remote.getGlobal('search').search_arguments.rank.searched,
-                searchbydate: remote.getGlobal('search').search_arguments.searchbydate.searched
+                tag: getGlobal('search').search_arguments.tag.searched,
+                date_start: getGlobal('search').search_arguments.date_start.searched,
+                date_end: getGlobal('search').search_arguments.date_end.searched,
+                description: getGlobal('search').search_arguments.description.searched,
+                rank: getGlobal('search').search_arguments.rank.searched,
+                searchbydate: getGlobal('search').search_arguments.searchbydate.searched
               });
-              this.setState({ search_hidden: remote.getGlobal('search').search_hidden });
+              this.setState({ search_hidden: getGlobal('search').search_hidden });
             } else {
 
               if (add_call === true) {
@@ -224,7 +224,7 @@ class ViewTimeline extends Component {
 
         this.setState({loading: true});
 
-        remote.getGlobal('searching_adding').searching_adding = "adding";
+        getGlobal('searching_adding').searching_adding = "adding";
 
         this.viewAll(false, true);
 
@@ -240,8 +240,8 @@ class ViewTimeline extends Component {
 
   editEntry(id, _id, global_restore) {
 
-    remote.getGlobal('enterTracker').tag_insert_tracker = false;
-    remote.getGlobal('enterTracker').component_tracker = "edit";
+    getGlobal('enterTracker').tag_insert_tracker = false;
+    getGlobal('enterTracker').component_tracker = "edit";
     document.addEventListener("keydown", this.enterPress, false);
 
     let state = Object.assign({}, this.state);
@@ -252,16 +252,16 @@ class ViewTimeline extends Component {
 
       if (global_restore === false) {
         this.cancelEdit();
-        remote.getGlobal('editing').id = id;
-        remote.getGlobal('editing')._id = _id;
-        remote.getGlobal('editing').editing_entry = state.entries[id];
+        getGlobal('editing').id = id;
+        getGlobal('editing')._id = _id;
+        getGlobal('editing').editing_entry = state.entries[id];
         state.temp = cloneDeep(state.entries[id]);
-        remote.getGlobal('editing').temp = state.temp;
+        getGlobal('editing').temp = state.temp;
       }
 
       state.editing = id;
 
-      state.tags = remote.getGlobal('editing').tags;
+      state.tags = getGlobal('editing').tags;
 
       state.editor = state.entries[id].body;
 
@@ -274,21 +274,21 @@ class ViewTimeline extends Component {
 
         if (global_restore === false) {
           this.cancelEdit();
-          remote.getGlobal('editing').id = id;
-          remote.getGlobal('editing')._id = _id;
-          remote.getGlobal('editing').editing_entry = state.entries[id];
+          getGlobal('editing').id = id;
+          getGlobal('editing')._id = _id;
+          getGlobal('editing').editing_entry = state.entries[id];
 
 
 
 
 
           state.temp = cloneDeep(state.entries[id]);
-          remote.getGlobal('editing').temp = state.temp;
+          getGlobal('editing').temp = state.temp;
         }
 
         state.editing = id;
 
-        state.tags = remote.getGlobal('editing').tags;
+        state.tags = getGlobal('editing').tags;
 
         state.unsaved = false;
 
@@ -324,15 +324,15 @@ class ViewTimeline extends Component {
 
     this.setState(state);
 
-    remote.getGlobal('editing').id = "";
-    remote.getGlobal('editing')._id = "";
-    remote.getGlobal('editing').tags = "";
-    remote.getGlobal('editing').unsaved = false;
-    remote.getGlobal('editing').editing_entry = {};
+    getGlobal('editing').id = "";
+    getGlobal('editing')._id = "";
+    getGlobal('editing').tags = "";
+    getGlobal('editing').unsaved = false;
+    getGlobal('editing').editing_entry = {};
 
     if (clicked === true) {
-      remote.getGlobal('enterTracker').tag_insert_tracker = false;
-      remote.getGlobal('enterTracker').component_tracker = "";
+      getGlobal('enterTracker').tag_insert_tracker = false;
+      getGlobal('enterTracker').component_tracker = "";
       document.removeEventListener("keydown", this.enterPress, false);
     }
   }
@@ -344,7 +344,7 @@ class ViewTimeline extends Component {
 
     if (confirm_delete === true) {
 
-      remote.getGlobal('editing').loc = window.pageYOffset;
+      getGlobal('editing').loc = window.pageYOffset;
       let entered = this.state.entries[id].entered;
 
       this.props.entries_longterm.remove({ entered: entered }, {}, function (err, numRemoved) {
@@ -374,12 +374,12 @@ class ViewTimeline extends Component {
 
       this.setState(state);
 
-      remote.getGlobal('editing').id = "";
-      remote.getGlobal('editing')._id = "";
-      remote.getGlobal('editing').unsaved = false;
-      remote.getGlobal('editing').editing_entry = {};
-      remote.getGlobal('enterTracker').tag_insert_tracker = false;
-      remote.getGlobal('enterTracker').component_tracker = "";
+      getGlobal('editing').id = "";
+      getGlobal('editing')._id = "";
+      getGlobal('editing').unsaved = false;
+      getGlobal('editing').editing_entry = {};
+      getGlobal('enterTracker').tag_insert_tracker = false;
+      getGlobal('enterTracker').component_tracker = "";
       document.removeEventListener("keydown", this.enterPress, false);
     }
   }
@@ -387,7 +387,7 @@ class ViewTimeline extends Component {
 
   saveEntry() {
 
-    remote.getGlobal('editing').loc = window.pageYOffset;
+    getGlobal('editing').loc = window.pageYOffset;
     let id = this.state.id;
     let _id = this.state._id;
 
@@ -430,12 +430,12 @@ class ViewTimeline extends Component {
 
       this.setState(state);
 
-      remote.getGlobal('editing').id = "";
-      remote.getGlobal('editing')._id = "";
-      remote.getGlobal('editing').unsaved = false;
-      remote.getGlobal('editing').editing_entry = {};
-      remote.getGlobal('enterTracker').tag_insert_tracker = false;
-      remote.getGlobal('enterTracker').component_tracker = "";
+      getGlobal('editing').id = "";
+      getGlobal('editing')._id = "";
+      getGlobal('editing').unsaved = false;
+      getGlobal('editing').editing_entry = {};
+      getGlobal('enterTracker').tag_insert_tracker = false;
+      getGlobal('enterTracker').component_tracker = "";
       document.removeEventListener("keydown", this.enterPress, false);
     }
   }
@@ -444,7 +444,7 @@ class ViewTimeline extends Component {
   viewSearchAdd(status) {
     this.setState({ searching_adding: status, cancel: true });
 
-    remote.getGlobal('searching_adding').searching_adding = status;
+    getGlobal('searching_adding').searching_adding = status;
   }
 
 
@@ -463,25 +463,25 @@ class ViewTimeline extends Component {
 
         this.setState({page: 1});
 
-        remote.getGlobal('search').page = 1;
+        getGlobal('search').page = 1;
       }
 
       if (tag_search === true) {
         this.setState({searching_adding: "searching"}, function() {
-          remote.getGlobal('searching_adding').searching_adding = "searching";
+          getGlobal('searching_adding').searching_adding = "searching";
         });
       }
 
-      remote.getGlobal('search').view_all = false;
+      getGlobal('search').view_all = false;
 
-      remote.getGlobal('search').search_arguments.tag.searched = tag;
-      remote.getGlobal('search').search_arguments.date_start.searched = date_start;
-      remote.getGlobal('search').search_arguments.date_end.searched = date_end;
-      remote.getGlobal('search').search_arguments.description.searched = description;
-      remote.getGlobal('search').search_arguments.rank.searched = rank;
-      remote.getGlobal('search').search_arguments.searchbydate.searched = searchArgs.searchbydate;
+      getGlobal('search').search_arguments.tag.searched = tag;
+      getGlobal('search').search_arguments.date_start.searched = date_start;
+      getGlobal('search').search_arguments.date_end.searched = date_end;
+      getGlobal('search').search_arguments.description.searched = description;
+      getGlobal('search').search_arguments.rank.searched = rank;
+      getGlobal('search').search_arguments.searchbydate.searched = searchArgs.searchbydate;
 
-      remote.getGlobal('search').search_arguments.tag.field = tag;
+      getGlobal('search').search_arguments.tag.field = tag;
 
       if (this.conditionTest() === true) {
         var confirm_search = confirm("Do you want to lose all unsaved changes?");
@@ -562,10 +562,10 @@ class ViewTimeline extends Component {
 
       this.searchString(tags, date_start, date_end, description, ranks);
 
-      if (remote.getGlobal('editing').loc !== 0) {
+      if (getGlobal('editing').loc !== 0) {
         setTimeout(function() {
-          window.scrollTo(0, remote.getGlobal('editing').loc);
-          remote.getGlobal('editing').loc = 0;
+          window.scrollTo(0, getGlobal('editing').loc);
+          getGlobal('editing').loc = 0;
         }, 300);
       } else {
         window.scrollTo(0, 0);
@@ -687,9 +687,9 @@ class ViewTimeline extends Component {
 
     this.setState({unsaved: true, editor: event.editor.getData() });
 
-    remote.getGlobal('editing').editing_entry.body = event.editor.getData();
-    remote.getGlobal('editing').unsaved = true;
-    remote.getGlobal('enterTracker').component_tracker = "edit";
+    getGlobal('editing').editing_entry.body = event.editor.getData();
+    getGlobal('editing').unsaved = true;
+    getGlobal('enterTracker').component_tracker = "edit";
   }
 
 
@@ -703,10 +703,10 @@ class ViewTimeline extends Component {
 
     this.setState(state);
 
-    remote.getGlobal('editing').editing_entry.display_date = date;
-    remote.getGlobal('editing').unsaved = true;
-    remote.getGlobal('enterTracker').tag_insert_tracker = false;
-    remote.getGlobal('enterTracker').component_tracker = "edit";
+    getGlobal('editing').editing_entry.display_date = date;
+    getGlobal('editing').unsaved = true;
+    getGlobal('enterTracker').tag_insert_tracker = false;
+    getGlobal('enterTracker').component_tracker = "edit";
   }
 
   handle_rank_Change(event) {
@@ -719,22 +719,22 @@ class ViewTimeline extends Component {
 
     this.setState(state);
 
-    remote.getGlobal('editing').editing_entry.rank = event.target.value;
-    remote.getGlobal('editing').unsaved = true;
-    remote.getGlobal('enterTracker').tag_insert_tracker = false;
-    remote.getGlobal('enterTracker').component_tracker = "edit";
+    getGlobal('editing').editing_entry.rank = event.target.value;
+    getGlobal('editing').unsaved = true;
+    getGlobal('enterTracker').tag_insert_tracker = false;
+    getGlobal('enterTracker').component_tracker = "edit";
   }
 
   handle_tags_Change() {
 
     this.setState({tags: this.tag.value, unsaved: true});
-    remote.getGlobal('editing').unsaved = true;
-    remote.getGlobal('editing').tags = this.tag.value;
+    getGlobal('editing').unsaved = true;
+    getGlobal('editing').tags = this.tag.value;
   }
 
   handle_tracker_tags_onClick() {
-    remote.getGlobal('enterTracker').tag_insert_tracker = true;
-    remote.getGlobal('enterTracker').component_tracker = "edit";
+    getGlobal('enterTracker').tag_insert_tracker = true;
+    getGlobal('enterTracker').component_tracker = "edit";
   }
 
 
@@ -762,10 +762,10 @@ class ViewTimeline extends Component {
 
     this.setState(state);
 
-    remote.getGlobal('editing').editing_entry.tags = state.entries[id].tags;
-    remote.getGlobal('editing').unsaved = true;
-    remote.getGlobal('enterTracker').tag_insert_tracker = false;
-    remote.getGlobal('enterTracker').component_tracker = "edit";
+    getGlobal('editing').editing_entry.tags = state.entries[id].tags;
+    getGlobal('editing').unsaved = true;
+    getGlobal('enterTracker').tag_insert_tracker = false;
+    getGlobal('enterTracker').component_tracker = "edit";
   }
 
 
@@ -811,16 +811,16 @@ class ViewTimeline extends Component {
 
         this.tag.blur();
 
-        remote.getGlobal('editing').editing_entry.tags = tags;
-        remote.getGlobal('editing').unsaved = true;
-        remote.getGlobal('editing').tags = "";
-        remote.getGlobal('enterTracker').tag_insert_tracker = false;
-        remote.getGlobal('enterTracker').component_tracker = "edit";
+        getGlobal('editing').editing_entry.tags = tags;
+        getGlobal('editing').unsaved = true;
+        getGlobal('editing').tags = "";
+        getGlobal('enterTracker').tag_insert_tracker = false;
+        getGlobal('enterTracker').component_tracker = "edit";
       } else {
         alert("You have already entered that tag for this entry.");
       }
     } else {
-      remote.getGlobal('enterTracker').component_tracker = "edit";
+      getGlobal('enterTracker').component_tracker = "edit";
       this.saveEntry();
     }
   }
@@ -938,8 +938,8 @@ class ViewTimeline extends Component {
         return entries;
       }
 
-      remote.getGlobal('search').ascdesc = ascdesc;
-      remote.getGlobal('search').sorted = sort_symbol;
+      getGlobal('search').ascdesc = ascdesc;
+      getGlobal('search').sorted = sort_symbol;
     }
 
     if (this.conditionTest() === true) {

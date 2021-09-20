@@ -3,7 +3,7 @@ import DatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css';
 import Editor from './editor-component';
 import Utilities from './js/utilities.js';
-const remote = window.require('electron').remote;
+const {getGlobal} = window.require('@electron/remote');
 
 class Add extends Component {
   constructor(props) {
@@ -13,33 +13,33 @@ class Add extends Component {
     this.CKEditor = React.createRef();
 
     this.state = {
-      date: remote.getGlobal('adding').date,
-      tags: remote.getGlobal('adding').tags,
-      editor: remote.getGlobal('adding').editor,
-      rank: remote.getGlobal('adding').rank,
-      all_tags: remote.getGlobal('adding').all_tags
+      date: getGlobal('adding').date,
+      tags: getGlobal('adding').tags,
+      editor: getGlobal('adding').editor,
+      rank: getGlobal('adding').rank,
+      all_tags: getGlobal('adding').all_tags
     }
   }
 
   componentDidMount() {
-    remote.getGlobal('enterTracker').tag_insert_tracker = false;
-    remote.getGlobal('enterTracker').component_tracker = "add";
+    getGlobal('enterTracker').tag_insert_tracker = false;
+    getGlobal('enterTracker').component_tracker = "add";
     document.addEventListener("keydown", this.pressEnter, false);
   }
 
   componentWillUnmount() {
 
-    remote.getGlobal('adding').tags = this.tag.value;
-    remote.getGlobal('adding').editor = this.CKEditor.editor.getData();
-    remote.getGlobal('enterTracker').tag_insert_tracker = false;
-    remote.getGlobal('enterTracker').component_tracker = "";
+    getGlobal('adding').tags = this.tag.value;
+    getGlobal('adding').editor = this.CKEditor.editor.getData();
+    getGlobal('enterTracker').tag_insert_tracker = false;
+    getGlobal('enterTracker').component_tracker = "";
     document.removeEventListener("keydown", this.pressEnter, false);
   }
 
   pressEnter(event) {
-    if (event.keyCode === 13 && remote.getGlobal('enterTracker').tag_insert_tracker === false && remote.getGlobal('enterTracker').component_tracker === "add") {
+    if (event.keyCode === 13 && getGlobal('enterTracker').tag_insert_tracker === false && getGlobal('enterTracker').component_tracker === "add") {
       this.handleSubmit();
-    } else if (event.keyCode === 13 && remote.getGlobal('enterTracker').tag_insert_tracker === true && remote.getGlobal('enterTracker').component_tracker === "add") {
+    } else if (event.keyCode === 13 && getGlobal('enterTracker').tag_insert_tracker === true && getGlobal('enterTracker').component_tracker === "add") {
       this.addTag();
     }
   }
@@ -131,55 +131,55 @@ class Add extends Component {
         state.tags = "";
 
         this.setState(state);
-        remote.getGlobal('adding').all_tags = tags;
+        getGlobal('adding').all_tags = tags;
 
         this.tag.value = "";
 
         this.tag.blur();
 
-        remote.getGlobal('enterTracker').tag_insert_tracker = false;
-        remote.getGlobal('enterTracker').component_tracker = "add";
+        getGlobal('enterTracker').tag_insert_tracker = false;
+        getGlobal('enterTracker').component_tracker = "add";
       } else {
         alert("You have already entered that tag for this entry.");
       }
     } else {
-      remote.getGlobal('enterTracker').component_tracker = "add";
+      getGlobal('enterTracker').component_tracker = "add";
       this.handleSubmit();
     }
   }
 
   handle_tags_Change(event) {
     this.setState({ tags: event.target.value }, function() {
-      remote.getGlobal('adding').tags = this.state.tags;
+      getGlobal('adding').tags = this.state.tags;
     });
   }
 
   handle_rank_Change(event) {
     this.setState({ rank: event.target.value }, function() {
-      remote.getGlobal('adding').rank = this.state.rank;
-      remote.getGlobal('enterTracker').tag_insert_tracker = false;
-      remote.getGlobal('enterTracker').component_tracker = "add";
+      getGlobal('adding').rank = this.state.rank;
+      getGlobal('enterTracker').tag_insert_tracker = false;
+      getGlobal('enterTracker').component_tracker = "add";
     });
   }
 
   handle_editor_Change(event) {
     this.setState({ editor: event.editor.getData() }, function() {
-      remote.getGlobal('adding').editor = this.state.editor;
-      remote.getGlobal('enterTracker').component_tracker = "add";
+      getGlobal('adding').editor = this.state.editor;
+      getGlobal('enterTracker').component_tracker = "add";
     });
   }
 
   handle_date_Change(event) {
     this.setState({ date: event }, function() {
-      remote.getGlobal('adding').date = this.state.date;
-      remote.getGlobal('enterTracker').tag_insert_tracker = false;
-      remote.getGlobal('enterTracker').component_tracker = "add";
+      getGlobal('adding').date = this.state.date;
+      getGlobal('enterTracker').tag_insert_tracker = false;
+      getGlobal('enterTracker').component_tracker = "add";
     });
   }
 
   handle_tracker_tags_onClick() {
-    remote.getGlobal('enterTracker').tag_insert_tracker = true;
-    remote.getGlobal('enterTracker').component_tracker = "add";
+    getGlobal('enterTracker').tag_insert_tracker = true;
+    getGlobal('enterTracker').component_tracker = "add";
   }
 
 
@@ -202,9 +202,9 @@ class Add extends Component {
     let state = Object.assign({}, this.state);
 
     state.all_tags.splice(i, 1);
-    remote.getGlobal('adding').all_tags = state.all_tags;
-    remote.getGlobal('enterTracker').tag_insert_tracker = false;
-    remote.getGlobal('enterTracker').component_tracker = "add";
+    getGlobal('adding').all_tags = state.all_tags;
+    getGlobal('enterTracker').tag_insert_tracker = false;
+    getGlobal('enterTracker').component_tracker = "add";
 
     this.setState(state);
   }
@@ -215,13 +215,13 @@ class Add extends Component {
     this.setState({date: new Date(), tags: "", all_tags: [], editor: "", rank: "0"});
     this.tag.value = "";
 
-    remote.getGlobal('adding').tags = "";
-    remote.getGlobal('adding').date = new Date();
-    remote.getGlobal('adding').all_tags = [];
-    remote.getGlobal('adding').editor = "";
-    remote.getGlobal('adding').rank = "0";
-    remote.getGlobal('enterTracker').tag_insert_tracker = false;
-    remote.getGlobal('enterTracker').component_tracker = "add";
+    getGlobal('adding').tags = "";
+    getGlobal('adding').date = new Date();
+    getGlobal('adding').all_tags = [];
+    getGlobal('adding').editor = "";
+    getGlobal('adding').rank = "0";
+    getGlobal('enterTracker').tag_insert_tracker = false;
+    getGlobal('enterTracker').component_tracker = "add";
   }
 
   render() {
