@@ -22,9 +22,9 @@ class AppData {
         button_active_background_color: "#4d3300",
         button_active_color: "#000000",
         button_active_border: "1px solid #000000",
-        theader_border: "2px solid #000000",
+        theader_border: "3px solid #000000",
         theader_background: "#D7D3CB",
-        entry_border: "2px solid #000000",
+        entry_border: "3px solid #000000",
         entry_background: "#fff7e6"
       },
       templates: [{
@@ -45,9 +45,9 @@ class AppData {
           button_active_background_color: "#4d3300",
           button_active_color: "#000000",
           button_active_border: "1px solid #000000",
-          theader_border: "2px solid #000000",
+          theader_border: "3px solid #000000",
           theader_background: "#D7D3CB",
-          entry_border: "2px solid #000000",
+          entry_border: "3px solid #000000",
           entry_background: "#fff7e6"
         }
       }, {
@@ -68,9 +68,9 @@ class AppData {
           button_active_background_color: "#053F05",
           button_active_color: "#032903",
           button_active_border: "1px solid #032903",
-          theader_border: "2px solid #032903",
+          theader_border: "3px solid #032903",
           theader_background: "#AFF9AF",
-          entry_border: "2px solid #032903",
+          entry_border: "3px solid #032903",
           entry_background: "#CEFCCE"
         }
       }, {
@@ -91,9 +91,9 @@ class AppData {
           button_active_background_color: "#C97D05",
           button_active_color: "#3D2601",
           button_active_border: "1px solid #3D2601",
-          theader_border: "2px solid #3D2601",
+          theader_border: "3px solid #3D2601",
           theader_background: "#FEDAA0",
-          entry_border: "2px solid #3D2601",
+          entry_border: "3px solid #3D2601",
           entry_background: "#F0E1CA"
         }
       }, {
@@ -114,9 +114,9 @@ class AppData {
           button_active_background_color: "#92128B",
           button_active_color: "#43053F",
           button_active_border: "1px solid #43053F",
-          theader_border: "2px solid #43053F",
+          theader_border: "3px solid #43053F",
           theader_background: "#E7C5E5",
-          entry_border: "2px solid #43053F",
+          entry_border: "3px solid #43053F",
           entry_background: "#F1DDF0"
         }
       }, {
@@ -137,9 +137,9 @@ class AppData {
           button_active_background_color: "#800000",
           button_active_color: "#2D0303",
           button_active_border: "1px solid #2D0303",
-          theader_border: "2px solid #2D0303",
+          theader_border: "3px solid #2D0303",
           theader_background: "#E4C8C8",
-          entry_border: "2px solid #2D0303",
+          entry_border: "3px solid #2D0303",
           entry_background: "#E9D7D7"
         }
       }, {
@@ -160,9 +160,9 @@ class AppData {
           button_active_background_color: "#01059D",
           button_active_color: "#040648",
           button_active_border: "1px solid #040648",
-          theader_border: "2px solid #040648",
+          theader_border: "3px solid #040648",
           theader_background: "#C2C3E6",
-          entry_border: "2px solid #040648",
+          entry_border: "3px solid #040648",
           entry_background: "#D7D8ED"
         }
       }, {
@@ -183,9 +183,9 @@ class AppData {
           button_active_background_color: "#676741",
           button_active_color: "#232303",
           button_active_border: "1px solid #232303",
-          theader_border: "2px solid #232303",
+          theader_border: "3px solid #232303",
           theader_background: "#D2D2BE",
-          entry_border: "2px solid #232303",
+          entry_border: "3px solid #232303",
           entry_background: "#DFDFD3"
         }
       }, {
@@ -206,9 +206,9 @@ class AppData {
           button_active_background_color: "#019997",
           button_active_color: "#033736",
           button_active_border: "1px solid #033736",
-          theader_border: "2px solid #033736",
+          theader_border: "3px solid #033736",
           theader_background: "#99D9D8",
-          entry_border: "2px solid #033736",
+          entry_border: "3px solid #033736",
           entry_background: "#C4E4E4"
         }
       }]
