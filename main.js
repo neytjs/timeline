@@ -1,5 +1,6 @@
 const { app, Menu, MenuItem, ipcMain, BrowserWindow, dialog } = require('electron');
 const fs = require('fs');
+require('@electron/remote/main').initialize();
 
 app.on('ready', () => {
 	mainWindow = new BrowserWindow({
@@ -8,8 +9,7 @@ app.on('ready', () => {
 
 		webPreferences: {
 			nodeIntegration: true,
-            enableRemoteModule: true,
-			devTools: false
+			contextIsolation: false
 		},
 		icon: require('path').join(__dirname, 'timeline.png')
 	});
@@ -215,8 +215,8 @@ app.on('ready', () => {
 	mainWindow.setTitle("unsaved" + timeline);
 	mainWindow.loadURL(url);
 	mainWindow.maximize();
-	mainWindow.webContents.openDevTools();
-
+//	mainWindow.webContents.openDevTools();
+	require("@electron/remote/main").enable(mainWindow.webContents);
 	mainWindow.on('close', function(e) {
 	var choice = require('electron').dialog.showMessageBoxSync(this,
 			{
@@ -228,7 +228,7 @@ app.on('ready', () => {
 		 if (choice === 1){
 			 e.preventDefault();
 		 }
-	});	
+	});
 });
 
 
